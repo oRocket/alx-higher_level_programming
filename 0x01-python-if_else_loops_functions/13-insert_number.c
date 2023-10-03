@@ -1,64 +1,70 @@
 #include "lists.h"
 
-listint_t *create_node(int n);
-
 /**
- * insert_node - inserts a node sorted in a linked list of ints
- * @head: double pointer to head of LL, needed for modification in edge
- * cases
+ * insert_node - malloc and insert node into sorted singly linked list
+ * @head: pointer to head of linked list
  * @number: data for new node
- * Return: pointer to newly created node, NULL on failure
+ * Return: address of new node, or NULL if failed
  */
+
 listint_t *insert_node(listint_t **head, int number)
 {
-	listint_t *cur_node = NULL, *new_node = NULL;
+	listint_t *tmp = NULL;
+	listint_t *new = NULL;
 
 	if (!head)
 		return (NULL);
-	else if (!(*head))
-	{
-		new_node = create_node(number);
-		*head = new_node;
-		return (new_node);
-	}
-	cur_node = *head;
-	while (cur_node)
-	{
-		if (cur_node->n >= number)
-		{
-			new_node = create_node(number);
-			new_node->next = cur_node;
-			*head = new_node;
-			return (new_node);
-		}
-		else if (cur_node->n <= number)
-		{
-			if (!cur_node->next || cur_node->next->n >= number)
-			{
-				new_node = create_node(number);
-				new_node->next = cur_node->next;
-				cur_node->next = new_node;
-				return (cur_node->next);
-			}
-		}
-		cur_node = cur_node->next;
-	}
-	return (NULL); /* failed */
-}
 
-/**
- * create_node - creates a new node for the LL
- * @n: data to insert into new node
- * Return: pointer to newly allocated node
- */
-listint_t *create_node(int n)
-{
-	listint_t *ret = NULL;
-
-	ret = malloc(sizeof(listint_t));
-	if (!ret)
+	/* malloc new node */
+	new = malloc(sizeof(listint_t));
+	if (new == NULL)
 		return (NULL);
-	ret->next = NULL;
-	ret->n = n;
-	return (ret);
+	new->n = number;
+	new->next = NULL;
+
+	/* if no linked list, insert node as the only member */
+	if (*head == NULL)
+	{
+		*head = new;
+		(*head)->next = NULL;
+		return (new);
+	}
+	/* if only one node in linked list, do comparision and insert */
+	if ((*head)->next == NULL)
+	{
+		if ((*head)->n < new->n)
+			(*head)->next = new;
+		else
+		{
+			new->next = *head;
+			*head = new;
+		}
+		return (new);
+	}
+
+	/* if lots of nodes in linked list, do comparision and insert */
+	tmp = *head;
+	while (tmp->next != NULL)
+	{
+		/* if new node num is smaller than first node, insert */
+		if (new->n < tmp->n)
+		{
+			new->next = tmp;
+			*head = new;
+			return (new);
+		}
+		/* if new node num is the same as an existing node, insert */
+		/* compare previous node and next node, insert in between */
+		if (((new->n > tmp->n) && (new->n < (tmp->next)->n)) ||
+				(new->n == tmp->n))
+		{
+			new->next = tmp->next;
+			tmp->next = new;
+			return (new);
+		}
+		tmp = tmp->next;
+	}
+	/* if new node is greatest and never inserted, insert now */
+	tmp->next = new;
+	return (new);
 }
