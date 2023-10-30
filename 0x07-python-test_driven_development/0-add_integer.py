@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 """
 Module add-integer
-Adds two integer together
-
+Adds two integers together
 """
+
 
 def add_integer(a, b=98):
     """
     Adds two integers.
+
     Args:
         a (int): First integer.
         b (int, optional): Second integer. Defaults to 98.
