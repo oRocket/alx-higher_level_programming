@@ -29,7 +29,7 @@ class Rectangle(Base):
             id (int): The identity of the rectangle
 
         Exceptions:
-            If the input is not an integer. raise 
+            If the input is not an integer. raise
                 TypeError: Input must be an integer
             If width or height is under or equals 0, raise
                 ValueError: Width or height must be > 0
